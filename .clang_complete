@@ -1,0 +1,27 @@
+-I/Users/Michael/Documents/PlatformIO/Projects/Irrigation_V3/include
+-I/Users/Michael/Documents/PlatformIO/Projects/Irrigation_V3/src
+-I/Users/Michael/.platformio/packages/framework-arduino-avr/cores/arduino
+-I/Users/Michael/.platformio/packages/framework-arduino-avr/variants/standard
+-I/Users/Michael/.platformio/lib/Adafruit ADXL343_ID6117
+-I/Users/Michael/.platformio/lib/Adafruit BNO055_ID506
+-I/Users/Michael/.platformio/lib/Adafruit BNO055_ID506/utility
+-I/Users/Michael/.platformio/lib/Adafruit BluefruitLE nRF51_ID177
+-I/Users/Michael/.platformio/lib/Adafruit BluefruitLE nRF51_ID177/utility
+-I/Users/Michael/.platformio/lib/Adafruit BusIO_ID6214
+-I/Users/Michael/.platformio/lib/Adafruit MMA8451 Library_ID1099
+-I/Users/Michael/.platformio/lib/Adafruit Unified Sensor_ID31
+-I/Users/Michael/.platformio/lib/RadioLib_ID5795/src
+-I/Users/Michael/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src
+-I/Users/Michael/.platformio/packages/framework-arduino-avr/libraries/HID/src
+-I/Users/Michael/.platformio/packages/framework-arduino-avr/libraries/SPI/src
+-I/Users/Michael/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src
+-I/Users/Michael/.platformio/packages/framework-arduino-avr/libraries/Wire/src
+-I/Users/Michael/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include
+-I/Users/Michael/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include-fixed
+-I/Users/Michael/.platformio/packages/toolchain-atmelavr/avr/include
+-DPLATFORMIO=60107
+-DARDUINO_AVR_UNO
+-DF_CPU=16000000L
+-DARDUINO_ARCH_AVR
+-DARDUINO=10808
+-D__AVR_ATmega328P__
