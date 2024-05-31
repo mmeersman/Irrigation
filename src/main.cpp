@@ -6,21 +6,21 @@ const long mspm = 60000; // Milliseconds per minute
 
 // Set up valve constants
 const int   v1_pin    = 10;         // Valve 1 pin number
-const float v1_rpd    = float(1)/float(2);        // Valve 1 runs per day
+const float v1_rpd    = 1;        // Valve 1 runs per day
 const long  v1_ms     = 10*mspm;    // Number of milliseconds to run valve 1
 bool        v1_actv   = 0;          // Boolean to tell whether valve 1 is currently active
 bool        istimer1  = 0;          // Boolean to tell whether a timer is currently active or if the program was just initialized
 
 const int   v2_pin    = 11;         // Valve 2 pin number
-const float v2_rpd    = 1;          // Valve 2 runs per day
+const float v2_rpd    = 2;          // Valve 2 runs per day
 const long  v2_ms     = 5*mspm;     // Number of milliseconds to run valve 2
 bool        v2_actv   = 0;          // Boolean to tell whether valve 1 is currently active
 bool        istimer2  = 0;          // Boolean to tell whether a timer is currently active or if the program was just initialized
 
 
 const int    v3_pin    = 12;         // Valve 3 pin number
-const float  v3_rpd    = float(1)/float(3);        // Valve 3 runs per day
-const long   v3_ms     = 30*mspm;    // Number of milliseconds to run valve 3
+const float  v3_rpd    = float(1)/float(4);        // Valve 3 runs per day
+const long   v3_ms     = 60*mspm;    // Number of milliseconds to run valve 3
 bool         v3_actv   = 0;          // Boolean to tell whether valve 1 is currently active
 bool         istimer3  = 0;          // Boolean to tell whether a timer is currently active or if the program was just initialized
 
@@ -70,9 +70,9 @@ void setup() {
 // long v3_count  = msv3;          // Inialize valve 3 counter
 
 // To initialize program with valves OFF, set counters to 1
-long v1_count  = 2;          // Inialize valve 1 counter
-long v2_count  = 2;          // Inialize valve 2 counter
-long v3_count  = 2;          // Inialize valve 3 counter
+long v1_count  = 1;          // Inialize valve 1 counter
+long v2_count  = 1;          // Inialize valve 2 counter
+long v3_count  = 1;          // Inialize valve 3 counter
 
 void loop() {
 
@@ -80,13 +80,16 @@ void loop() {
   S2.loop();
   S3.loop();
 
-  S1state = S1.getState();
+  // Update switch states. 1 means OFF, 0 means ON.
+  S1state = S1.getState(); 
   S2state = S2.getState();
   S3state = S3.getState();
 
   ////////////////
   // VALVE 1 logic
   ////////////////
+
+  // Turn on Valve 1 when its delay time has been exceeded AND when Valves 2 and 3 are not active
   if (v1_count>=msv1 && !v2_actv && !v3_actv) {
     v1_actv = 1; // Set valve 1 as active
     digitalWrite(v1_pin, HIGH); // Turn on valve 1
@@ -96,6 +99,7 @@ void loop() {
     Serial.print("Valve 1 timer is active!\n");
   }
 
+  // Turn off Valve 1 when timer is up AND if the switch is not currently in ON position
   if (v1_actv && v1_count==v1_ms) {
     if (digitalRead(v1_switchPin)) {
       digitalWrite(v1_pin, LOW); // Turn off valve 1, Wont turn off if valve's swtich is active, but will still reset timer boolean
@@ -123,6 +127,8 @@ void loop() {
   ////////////////
   // VALVE 2 logic
   ////////////////
+  
+  // Turn on Valve 2 when its delay time has been exceeded AND when Valves 1 and 3 are not active
   if (v2_count>=msv2 && !v1_actv && !v3_actv) {
     v2_actv = 1; // Set valve 2 as active
     digitalWrite(v2_pin, HIGH); // Turn on valve 2
@@ -132,6 +138,7 @@ void loop() {
     Serial.print("Valve 2 timer is active!\n");
   }
 
+  // Turn off Valve 2 when timer is up AND if the switch is not currently in ON position
   if (v2_actv && v2_count==v2_ms) { // Wont turn off if valve's swtich is active
     if (digitalRead(v2_switchPin)) {
       digitalWrite(v2_pin, LOW); // Turn off valve 2
@@ -142,7 +149,7 @@ void loop() {
     Serial.print("Valve 2 timer is up!\n");
   }
 
-    // Option to manually activate valve 2 using a switch without affecting any of the counts  
+  // Option to manually activate valve 2 using a switch without affecting any of the counts  
   if (!S2state && !v2_actv) {
     digitalWrite(v2_pin, HIGH); // Turn on valve 2
     v2_actv = 1; // Set valve 2 as active
@@ -156,6 +163,31 @@ void loop() {
     Serial.print("Valve 2 was turned off by the switch!\n");
   }
 
+  ////////////////
+  // VALVE 3 logic
+  ////////////////
+  
+  // Turn on Valve 3 when its delay time has been exceeded AND when Valves 1 and 2 are not active
+  if (v3_count>=msv3 && !v1_actv && !v2_actv) {
+    v3_actv = 1; // Set valve 3 as active
+    digitalWrite(v3_pin, HIGH); // Turn on valve 3
+    v3_count = 1; // Reset valve 3 counter
+    istimer3 = 1; // Set timer 3 boolean to on
+
+    Serial.print("Valve 3 timer is active!\n");
+  }
+
+  // Turn off Valve 3 when timer is up AND if the switch is not currently in ON position
+  if (v3_actv && v3_count==v3_ms) { // Wont turn off if valve's swtich is active
+    if (digitalRead(v3_switchPin)) {
+      digitalWrite(v3_pin, LOW); // Turn off valve 3
+      v3_actv = 0; // Set valve 3 as inactive
+    }
+    istimer3 = 0; // Set timer 3 boolean to off
+
+    Serial.print("Valve 3 timer is up!\n");
+  }
+
     // Option to manually activate valve 3 using a switch without affecting any of the counts  
   if (!S3state && !v3_actv) {
     digitalWrite(v3_pin, HIGH); // Turn on valve 3
@@ -163,6 +195,7 @@ void loop() {
 
     Serial.print("Valve 3 was turned on by the switch!\n");
   }
+
   if (S3state && v3_actv && !istimer3) { // Wont turn off if valve's timer is currently active
     digitalWrite(v3_pin, LOW); // Turn off valve 3
     v3_actv = 0; // Set valve 3 as inactive
